@@ -111,20 +111,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+//    final bool hasList = _randomColorGenerator is RandomListColor;
+    final bool hasList = true;
+
+    final Scaffold scaffold = Scaffold(
       key: _scaffoldKey,
-      appBar: _buildAppBar(),
+      appBar: _buildAppBar(hasList),
       drawer: _buildDrawer(),
-      body: ColorDisplay(
-        color: _randomColorGenerator.color,
-        colorName: _randomColorGenerator.colorName,
-      ),
+      body: _buildBody(hasList),
       floatingActionButton: _buildFAB(),
     );
+
+    return hasList ? DefaultTabController(length: 2, child: scaffold) : scaffold;
   }
 
   /// Builds the app bar with the popup menu items.
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(bool hasList) {
     return AppBar(
 //      title: Text(_randomColorGenerator.runtimeType.toString()),
       title: Text(_randomColorGenerator.title),
@@ -134,6 +136,15 @@ class _HomeScreenState extends State<HomeScreen> {
           itemBuilder: _buildMenuItems,
         ),
       ],
+      bottom: hasList
+          ? TabBar(
+        indicatorColor: Colors.black,
+              tabs: [
+                Tab(text: 'Random color',),
+                Tab(text: 'Available choices',),
+              ],
+            )
+          : null,
     );
   }
 
@@ -157,6 +168,15 @@ class _HomeScreenState extends State<HomeScreen> {
       onExtraSelected: drawerExtraSelection,
       selectedType: null,
     );
+  }
+
+  Widget _buildBody(bool hasList) {
+    final ColorDisplay colorDisplay = ColorDisplay(
+      color: _randomColorGenerator.color,
+      colorName: _randomColorGenerator.colorName,
+    );
+
+    return hasList ? TabBarView(children: [colorDisplay, Container()]) : colorDisplay;
   }
 
   /// Builds the two main floating action buttons for increment and decrement.
