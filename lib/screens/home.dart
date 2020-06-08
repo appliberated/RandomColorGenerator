@@ -2,8 +2,11 @@
 // Use of this source code is governed by an MIT-style license that can be
 // found in the LICENSE file.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:random_color_generator/common/app_strings.dart';
+import 'package:random_color_generator/models/random_color.dart';
 import 'package:random_color_generator/utils/utils.dart';
 import 'package:random_color_generator/widgets/app_drawer.dart';
 
@@ -19,9 +22,34 @@ class _HomeScreenState extends State<HomeScreen> {
   /// The AppBar's action needs this key to find its own Scaffold.
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final Random _random = Random();
+
+  ColorType _currentColorType;
+
+  set currentColorType(ColorType value) {
+    setState(() {
+      _currentColorType = value;
+      _randomColorGenerator = _randomColorGenerators[_currentColorType];
+    });
+  }
+
+  RandomColor _randomColorGenerator;
+
+  Map<ColorType, RandomColor> _randomColorGenerators;
+
   @override
   void initState() {
     super.initState();
+
+    _randomColorGenerators = {
+//      ColorType.basic: BasicColorGenerator(_random),
+      ColorType.css: RandomCSSColor(_random),
+//      ColorType.material: MaterialColorGenerator(_random),
+    };
+
+//    currentColorType = ColorType.basic;
+    currentColorType = ColorType.css;
+
     _loadCounters();
   }
 
@@ -46,6 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
 //        Share.share(AppStrings.shareText(name, value), subject: name);
 //        break;
     }
+  }
+
+  void drawerMainSelection(ColorType type) {
+    currentColorType = type;
   }
 
   void drawerExtraSelection(DrawerExtraActions item) {
@@ -80,6 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       appBar: _buildAppBar(),
       drawer: _buildDrawer(),
+      body: Container(
+        color: _randomColorGenerator.color,
+        alignment: Alignment.center,
+        child: Text('Hello'),
+      ),
 //      body: CounterDisplay(
 //        value: _counters.current.value,
 //        color: _counters.current.color,
@@ -92,7 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Builds the app bar with the popup menu items.
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-//      title: Text(_counters.current.name),
+//      title: Text(_randomColorGenerator.runtimeType.toString()),
+      title: Text(_randomColorGenerator.title),
       actions: <Widget>[
         PopupMenuButton<MenuAction>(
           onSelected: popupMenuSelection,
@@ -118,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildDrawer() {
     return AppDrawer(
       title: AppStrings.drawerTitle,
+      onSelected: drawerMainSelection,
       onExtraSelected: drawerExtraSelection,
       selectedType: null,
     );
@@ -129,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: const Icon(Icons.refresh),
 //      tooltip: AppStrings.decrementTooltip,
 //      onPressed: () => setState(() => _counters.current.decrement()),
-      onPressed: () => setState(() => {}),
+      onPressed: () => setState(() => _randomColorGenerator.randomize()),
     );
   }
 }

@@ -21,10 +21,10 @@ class AppDrawer extends StatelessWidget {
   final String title;
 
   /// The current random color type.
-  final RandomColorType selectedType;
+  final ColorType selectedType;
 
   /// Called when the user taps a drawer list tile.
-  final void Function(RandomColorType type) onSelected;
+  final void Function(ColorType type) onSelected;
 
   /// Called when the user taps a drawer list tile.
   final void Function(DrawerExtraActions value) onExtraSelected;
@@ -42,7 +42,7 @@ class AppDrawer extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             _buildDrawerHeader(context),
-            ...RandomColorType.values.map((type) => _buildMainTile(type)),
+            ...ColorType.values.map((type) => _buildMainTile(context, type)),
             Divider(),
             _buildExtraTile(context, DrawerExtraActions.settings),
             _buildExtraTile(context, DrawerExtraActions.help),
@@ -65,11 +65,14 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildMainTile(RandomColorType type) {
+  Widget _buildMainTile(BuildContext context, ColorType type) {
     return ListTile(
-      title: Text(describeEnum(type)),
+      title: Text(RandomColor.nameOf(type)),
       selected: selectedType == type,
-      onTap: () => onSelected?.call(type),
+      onTap: () {
+        Navigator.pop(context);
+        onSelected?.call(type);
+      },
     );
 //    return ColorListTile(
 //      color: Weekdays.colorOf(day),
@@ -89,7 +92,10 @@ class AppDrawer extends StatelessWidget {
     return ListTile(
       leading: Icon(drawerExtraIcons[action]),
       title: Text(AppStrings.drawerExtraTitles[action]),
-      onTap: () => _onExtraActionTap(context, action),
+      onTap: () {
+        Navigator.pop(context);
+        _onExtraActionTap(context, action);
+      },
     );
   }
 }

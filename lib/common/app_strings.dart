@@ -1,3 +1,4 @@
+import 'package:random_color_generator/models/random_color.dart';
 import 'package:random_color_generator/screens/home.dart';
 import 'package:random_color_generator/widgets/app_drawer.dart';
 
@@ -27,6 +28,22 @@ class AppStrings {
   static const Map<MenuAction, String> menuActions = {
     MenuAction.reset: 'Reset counter',
     MenuAction.share: 'Share...',
+  };
+
+  //#endregion
+
+  //#region Model
+
+  static const Map<ColorType, String> colorTypeTitles = {
+    ColorType.basic: 'Random Basic Color Term',
+    ColorType.css: 'Random CSS Color',
+    ColorType.material: 'Random Material Color',
+  };
+
+  static const Map<ColorType, String> randomColorTypeNames = {
+    ColorType.basic: 'Basic Color Terms',
+    ColorType.css: 'CSS Colors',
+    ColorType.material: 'Material Colors',
   };
 
 //#endregion

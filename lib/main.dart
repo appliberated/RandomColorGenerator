@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:random_color_generator/screens/home.dart';
+import 'package:random_color_generator/utils/utils.dart';
 
 import 'common/app_strings.dart';
 
@@ -17,7 +18,7 @@ class RandomColorGeneratorApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: AppStrings.appName,
       theme: ThemeData(
-//        primarySwatch: Colors.white.createMaterialColor(),
+        primarySwatch: Colors.white.createMaterialColor(),
 //        buttonTheme: ButtonThemeData(
 //          colorScheme: ColorScheme.fromSwatch(
 //            primarySwatch: Colors.black.createMaterialColor(),
