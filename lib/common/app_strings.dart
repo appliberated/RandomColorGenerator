@@ -40,7 +40,7 @@ class AppStrings {
     ColorType.material: 'Random Material Color',
   };
 
-  static const Map<ColorType, String> randomColorTypeNames = {
+  static const Map<ColorType, String> colorTypeListNames = {
     ColorType.basic: 'Basic Color Terms',
     ColorType.css: 'CSS Colors',
     ColorType.material: 'Material Colors',

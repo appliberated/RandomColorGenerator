@@ -7,6 +7,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:random_color_generator/common/app_strings.dart';
 import 'package:random_color_generator/models/random_color.dart';
+import 'package:random_color_generator/screens/color_list_screen.dart';
 import 'package:random_color_generator/utils/utils.dart';
 import 'package:random_color_generator/widgets/app_drawer.dart';
 import 'package:random_color_generator/widgets/color_display.dart';
@@ -109,20 +110,31 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _loadColorListScreen() async {
+    await Navigator.push<void>(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ColorListScreen(
+                  title: _randomColorGenerator.listName,
+                  colorList: (_randomColorGenerator as RandomListColor).colorList,
+                )));
+    setState(() {
+      /* Refresh after returning from Settings screen. */
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-//    final bool hasList = _randomColorGenerator is RandomListColor;
-    final bool hasList = true;
-
-    final Scaffold scaffold = Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      appBar: _buildAppBar(hasList),
+      appBar: _buildAppBar(_randomColorGenerator is RandomListColor),
       drawer: _buildDrawer(),
-      body: _buildBody(hasList),
+      body: ColorDisplay(
+        color: _randomColorGenerator.color,
+        colorName: _randomColorGenerator.colorName,
+      ),
       floatingActionButton: _buildFAB(),
     );
-
-    return hasList ? DefaultTabController(length: 2, child: scaffold) : scaffold;
   }
 
   /// Builds the app bar with the popup menu items.
@@ -131,20 +143,17 @@ class _HomeScreenState extends State<HomeScreen> {
 //      title: Text(_randomColorGenerator.runtimeType.toString()),
       title: Text(_randomColorGenerator.title),
       actions: <Widget>[
+        if (hasList)
+          IconButton(
+            icon: const Icon(Icons.view_list),
+            tooltip: 'Available choices',
+            onPressed: () => _loadColorListScreen(),
+          ),
         PopupMenuButton<MenuAction>(
           onSelected: popupMenuSelection,
           itemBuilder: _buildMenuItems,
         ),
       ],
-      bottom: hasList
-          ? TabBar(
-        indicatorColor: Colors.black,
-              tabs: [
-                Tab(text: 'Random color',),
-                Tab(text: 'Available choices',),
-              ],
-            )
-          : null,
     );
   }
 
@@ -168,15 +177,6 @@ class _HomeScreenState extends State<HomeScreen> {
       onExtraSelected: drawerExtraSelection,
       selectedType: null,
     );
-  }
-
-  Widget _buildBody(bool hasList) {
-    final ColorDisplay colorDisplay = ColorDisplay(
-      color: _randomColorGenerator.color,
-      colorName: _randomColorGenerator.colorName,
-    );
-
-    return hasList ? TabBarView(children: [colorDisplay, Container()]) : colorDisplay;
   }
 
   /// Builds the two main floating action buttons for increment and decrement.

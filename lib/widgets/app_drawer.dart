@@ -67,7 +67,7 @@ class AppDrawer extends StatelessWidget {
 
   Widget _buildMainTile(BuildContext context, ColorType type) {
     return ListTile(
-      title: Text(RandomColor.nameOf(type)),
+      title: Text(RandomColor.listNameOf(type)),
       selected: selectedType == type,
       onTap: () {
         Navigator.pop(context);

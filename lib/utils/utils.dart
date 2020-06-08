@@ -27,6 +27,9 @@ extension ColorX on Color {
   Color contrastOf() =>
       ThemeData.estimateBrightnessForColor(this) == Brightness.light ? Colors.black : Colors.white;
 
+  String toHexTriplet() =>
+      '#${(value & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
+
   /// Creates a material color from any ARGB color value.
   MaterialColor createMaterialColor() {
     List<double> strengths = <double>[.05];

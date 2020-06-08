@@ -9,9 +9,9 @@ enum ColorType { basic, css, material }
 
 class NamedColor {
   final String name;
-  final int colorCode;
+  final Color color;
 
-  const NamedColor(this.name, this.colorCode);
+  const NamedColor(this.name, this.color);
 }
 
 abstract class RandomColor {
@@ -31,27 +31,31 @@ abstract class RandomColor {
 
   String get colorName;
 
-  /// Returns the name of the specified counter type (e.g. "Black Counter").
-  static String nameOf(ColorType type) => AppStrings.randomColorTypeNames[type];
+//  /// Returns the name of the specified counter type (e.g. "Black Counter").
+//  static String nameOf(ColorType type) => AppStrings.colorTypeListNames[type];
+
+  static String listNameOf(ColorType type) => AppStrings.colorTypeListNames[type];
+
+  String get listName => AppStrings.colorTypeListNames[colorType];
 }
 
 abstract class RandomListColor extends RandomColor {
   RandomListColor(Random random) : super(random) {
-    _randomNamedColor = _colorList[0];
+    _randomNamedColor = colorList[0];
   }
 
-  List<NamedColor> get _colorList;
+  List<NamedColor> get colorList;
 
   NamedColor _randomNamedColor;
 
   @override
-  Color get color => Color(_randomNamedColor.colorCode);
+  Color get color => _randomNamedColor.color;
 
   String get colorName => _randomNamedColor.name;
 
   @override
   void randomize() {
-    _randomNamedColor = _colorList[random.nextInt(_colorList.length)];
+    _randomNamedColor = colorList[random.nextInt(colorList.length)];
   }
 }
 
@@ -62,7 +66,7 @@ class RandomBasicColor extends RandomListColor {
   ColorType get colorType => ColorType.basic;
 
   @override
-  List<NamedColor> get _colorList => basicColors;
+  List<NamedColor> get colorList => basicColors;
 }
 
 class RandomCSSColor extends RandomListColor {
@@ -72,7 +76,7 @@ class RandomCSSColor extends RandomListColor {
   ColorType get colorType => ColorType.css;
 
   @override
-  List<NamedColor> get _colorList => cssColors;
+  List<NamedColor> get colorList => cssColors;
 }
 
 //class MaterialColorGenerator extends RandomColor {
