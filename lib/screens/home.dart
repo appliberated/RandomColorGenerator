@@ -9,6 +9,7 @@ import 'package:random_color_generator/common/app_strings.dart';
 import 'package:random_color_generator/models/random_color.dart';
 import 'package:random_color_generator/utils/utils.dart';
 import 'package:random_color_generator/widgets/app_drawer.dart';
+import 'package:random_color_generator/widgets/color_display.dart';
 
 /// Overflow menu items enumeration.
 enum MenuAction { reset, share }
@@ -42,13 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     _randomColorGenerators = {
-//      ColorType.basic: BasicColorGenerator(_random),
+      ColorType.basic: RandomBasicColor(_random),
       ColorType.css: RandomCSSColor(_random),
 //      ColorType.material: MaterialColorGenerator(_random),
     };
 
 //    currentColorType = ColorType.basic;
     currentColorType = ColorType.css;
+
+    _randomColorGenerator.randomize();
 
     _loadCounters();
   }
@@ -112,16 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
       key: _scaffoldKey,
       appBar: _buildAppBar(),
       drawer: _buildDrawer(),
-      body: Container(
+      body: ColorDisplay(
         color: _randomColorGenerator.color,
-        alignment: Alignment.center,
-        child: Text('Hello'),
+        colorName: _randomColorGenerator.colorName,
       ),
-//      body: CounterDisplay(
-//        value: _counters.current.value,
-//        color: _counters.current.color,
-//        isPortrait: isPortrait,
-//      ),
       floatingActionButton: _buildFAB(),
     );
   }

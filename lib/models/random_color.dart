@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:random_color_generator/common/app_strings.dart';
+import 'package:random_color_generator/models/basic_colors.dart';
 import 'package:random_color_generator/models/css_colors.dart';
 
 enum ColorType { basic, css, material }
@@ -20,7 +21,7 @@ abstract class RandomColor {
 
   ColorType get colorType;
 
-  Color get defaultColor;
+//  Color get defaultColor;
 
   String get title => AppStrings.colorTypeTitles[colorType];
 
@@ -28,12 +29,14 @@ abstract class RandomColor {
 
   Color get color;
 
+  String get colorName;
+
   /// Returns the name of the specified counter type (e.g. "Black Counter").
   static String nameOf(ColorType type) => AppStrings.randomColorTypeNames[type];
 }
 
-abstract class RandomNamedColor extends RandomColor {
-  RandomNamedColor(Random random) : super(random) {
+abstract class RandomListColor extends RandomColor {
+  RandomListColor(Random random) : super(random) {
     _randomNamedColor = _colorList[0];
   }
 
@@ -42,15 +45,9 @@ abstract class RandomNamedColor extends RandomColor {
   NamedColor _randomNamedColor;
 
   @override
-  // TODO: implement colorType
-  ColorType get colorType => throw UnimplementedError();
-
-  @override
-  // TODO: implement defaultColor
-  Color get defaultColor => throw UnimplementedError();
-
-  @override
   Color get color => Color(_randomNamedColor.colorCode);
+
+  String get colorName => _randomNamedColor.name;
 
   @override
   void randomize() {
@@ -58,41 +55,21 @@ abstract class RandomNamedColor extends RandomColor {
   }
 }
 
-//class BasicColorGenerator extends RandomColor {
-//  BasicColorGenerator(Random random) : super(random);
-//
-//  @override
-//  ColorType get colorType => ColorType.basic;
-//
-//  @override
-//  // TODO: implement defaultColor
-////  Color get defaultColor => throw UnimplementedError();
-//  Color get defaultColor => throw UnimplementedError();
-//
-//  @override
-//  // TODO: implement color
-////  Color get color => throw UnimplementedError();
-//  Color get color => Colors.red;
-//
-//  @override
-//  void randomize() {
-//    // TODO: implement randomize
-//  }
-//
-//
-//
-//}
+class RandomBasicColor extends RandomListColor {
+  RandomBasicColor(Random random) : super(random);
 
-class RandomCSSColor extends RandomNamedColor {
+  @override
+  ColorType get colorType => ColorType.basic;
+
+  @override
+  List<NamedColor> get _colorList => basicColors;
+}
+
+class RandomCSSColor extends RandomListColor {
   RandomCSSColor(Random random) : super(random);
 
   @override
   ColorType get colorType => ColorType.css;
-
-  @override
-  // TODO: implement defaultColor
-//  Color get defaultColor => throw UnimplementedError();
-  Color get defaultColor => throw UnimplementedError();
 
   @override
   List<NamedColor> get _colorList => cssColors;
